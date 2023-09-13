@@ -1,0 +1,14 @@
+---
+title: "Logboek"
+author: "Larissa Bouwknegt"
+date: "2023-09-13"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+
