@@ -1,5 +1,5 @@
 ---
-title: "Logboek"
+title: "Logbook"
 author: "Larissa Bouwknegt"
 date: "2023-09-13"
 output: pdf_document
@@ -10,5 +10,14 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
+#### 13-9-2023:
 
+Picked a data set:\newline
+https://www.kaggle.com/datasets/sidhus/crab-age-prediction
+\newline
 
+Data set about predicting the age of crabs based on physical features.  
+
+Setup of the repository, added logbook to repository. Made sure no direct commits could be made to main. 
+
+Start of the EDA. Written introduction and basic information about the data set. Loaded in the data, got a summary and checked for NA values. 
