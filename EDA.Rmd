@@ -1,0 +1,57 @@
+---
+title: "EDA"
+author: "Larissa Bouwknegt"
+date: "2023-09-13"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+"Crab age prediction" is a kaggle dataset with the physical properties and age of crabs farmed around Boston area. Crab is a food eaten and imported in many countries. Crab farming has low labor costs, production cost is comparatively lower and crabs grow fast. By knowing the right time to harvest crabs, when they mostly stop growing, profits can be maximized. This exploratory data analysis is to find connections between the different physical properties and the age of crabs. 
+
+## The dataset
+The data set contains the data of 3893 crabs, with data in 9 categories. The 9 categories data was collected in are:
+- Sex (gender of the crab)
+- Length (length of the crab in feet)
+- Diameter (diameter of the crab in feet)
+- Height (height of the crab in feet)
+- Weight (weight of the crab in ounces)
+- Shucked weight (weight of the crab without the shell in ounces)
+- Viscera weight (weight that wraps around your abdominal organs deep inside body in ounces)
+- Shell weight (weight of the shell in ounces)
+- Age (age of the crab in months)
+
+When importing the data set we can check if everything is as we expect it to be. 
+
+```{r}
+raw_data <- read.csv("CrabAgePrediction.csv")
+summary(raw_data)
+
+```
+
+A quick summary shows that there are indeed 9 categories collected for 3893 entries. It also gives a first insight into the distribution of the data. The age of the crabs goes from 1 month to 29 months with a mean of 9.955 which suggest that most crabs are young compared to the oldest entry. A deeper exploration of the distribution will be done later. First there will be a check for missing data and a conversion to centimeters and grams.
+ 
+```{r}
+sum(is.na(raw_data))
+```
+A sum of the NA values shows that there are no missing value which means the data set is complete for all categories. 
+
+The next step is conversion to centimeters and grams since that are the conventional metrics in the Netherlands where this EDA is conducted. 
+
+1 foot equals 30.48 centimeters and 1 ounces equals 28.3495231 grams
+
+```{r}
+raw_data[,c("Length", "Diameter", "Height" )] <- raw_data[,c("Length", "Diameter", "Height" )] * 30.48
+raw_data[,c("Weight", "Shucked.Weight", "Viscera.Weight", "Shell.Weight")] <- raw_data[,c("Weight", "Shucked.Weight", "Viscera.Weight", "Shell.Weight")] * 28.3495231
+```
+
+To check if the conversion worked the head is looked at.
+
+```{r}
+head(raw_data)
+```
+The values in the desired columns have changed so the conversions seem to have worked. 
+
