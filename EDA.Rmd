@@ -7,13 +7,15 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+
 ```
 
 ## Introduction
-"Crab age prediction" is a kaggle dataset with the physical properties and age of crabs farmed around Boston area. Crab is a food eaten and imported in many countries. Crab farming has low labor costs, production cost is comparatively lower and crabs grow fast. By knowing the right time to harvest crabs, when they mostly stop growing, profits can be maximized. This exploratory data analysis is to find connections between the different physical properties and the age of crabs. 
+"Crab age prediction" is a kaggle dataset (https://www.kaggle.com/datasets/sidhus/crab-age-prediction) with the physical properties and age of crabs farmed around Boston area. Crab is a food eaten and imported in many countries. Crab farming has low labor costs, production cost is comparatively lower and crabs grow fast. By knowing the right time to harvest crabs, when they mostly stop growing, profits can be maximized. This exploratory data analysis is to find connections between the different physical properties and the age of crabs. 
 
-## The dataset
-The data set contains the data of 3893 crabs, with data in 9 categories. The 9 categories data was collected in are:
+## First look and preperation
+The data set contains the data of 3893 crabs, with data in 9 categories. The 9 categories data was collected in are, this will later be added to a codebook:
 - Sex (gender of the crab)
 - Length (length of the crab in feet)
 - Diameter (diameter of the crab in feet)
@@ -24,34 +26,42 @@ The data set contains the data of 3893 crabs, with data in 9 categories. The 9 c
 - Shell weight (weight of the shell in ounces)
 - Age (age of the crab in months)
 
-When importing the data set we can check if everything is as we expect it to be. 
+When importing the data set we can check if everything is as expected with a quick summary.
 
 ```{r}
-raw_data <- read.csv("CrabAgePrediction.csv")
-summary(raw_data)
+crab_data <- read.csv("CrabAgePrediction.csv")
+summary(crab_data)
 
 ```
 
 A quick summary shows that there are indeed 9 categories collected for 3893 entries. It also gives a first insight into the distribution of the data. The age of the crabs goes from 1 month to 29 months with a mean of 9.955 which suggest that most crabs are young compared to the oldest entry. A deeper exploration of the distribution will be done later. First there will be a check for missing data and a conversion to centimeters and grams.
  
 ```{r}
-sum(is.na(raw_data))
+sum(is.na(crab_data))
 ```
 A sum of the NA values shows that there are no missing value which means the data set is complete for all categories. 
 
 The next step is conversion to centimeters and grams since that are the conventional metrics in the Netherlands where this EDA is conducted. 
 
-1 foot equals 30.48 centimeters and 1 ounces equals 28.3495231 grams
+1 foot equals 30.48 centimeters and 1 ounces equals 28.3495231 grams, this can then be applied to the correct categories with simple indexing and concatenation.
 
 ```{r}
-raw_data[,c("Length", "Diameter", "Height" )] <- raw_data[,c("Length", "Diameter", "Height" )] * 30.48
-raw_data[,c("Weight", "Shucked.Weight", "Viscera.Weight", "Shell.Weight")] <- raw_data[,c("Weight", "Shucked.Weight", "Viscera.Weight", "Shell.Weight")] * 28.3495231
+crab_data[,c("Length", "Diameter", "Height" )] <- crab_data[,c("Length", "Diameter", "Height" )] * 30.48
+crab_data[,c("Weight", "Shucked.Weight", "Viscera.Weight", "Shell.Weight")] <- crab_data[,c("Weight", "Shucked.Weight", "Viscera.Weight", "Shell.Weight")] * 28.3495231
 ```
 
 To check if the conversion worked the head is looked at.
 
 ```{r}
-head(raw_data)
+head(crab_data)
 ```
-The values in the desired columns have changed so the conversions seem to have worked. 
+The values in the desired columns have changed so the conversions seem to have worked.
+
+The next step is to make a codebook for readability and easy labeling. The codebook is made by using the colnames of the crab_data dataframe as the attributes and manually adding the units and descriptions to it.  
+```{r}
+codebook <- list("Attribute" = c(colnames(crab_data)), "Units" = c("-", "cm", "cm", "cm", "gram", "gram", "gram", "gram", "months"), "Description" = c("Gender of the crab, female(F), male(M) or interderminate(I)", "Lenght of the crab in centimeters", "Diameter of the crab in centimeters", "Height of the crab in centimeters", "Weight of the crab in grams", "Weight without the shell in grams", "Weight that wraps around your abdominal organs deep inside body in grams", "Weight of the shell in grams", "Age of the crab in months"))
+
+codebook_df <- as.data.frame(codebook)
+codebook_df
+``` 
 
