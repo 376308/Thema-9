@@ -32,3 +32,8 @@ Some problems with the needed packages, tried to update R studio, R and the inst
 
 Decided not to use this tutorial due to not easily editable the way as preffered. New codebook made with hand filled units and descriptions added to the exsisting collumn names in the origional dataframe. 
 
+#### 20-9-2023
+Started analysing the specific data. Barplot for the distribution of the gender was made and a reshape and boxplot for the length and weight categories was made. 
+
+Opstellen onderzoeksvraag: How accurately can you predict the age group of crabs based on physical properties and gender?
+
