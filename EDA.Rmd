@@ -7,7 +7,8 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-
+library(ggplot2)
+library(reshape)
 
 ```
 
@@ -65,3 +66,32 @@ codebook_df <- as.data.frame(codebook)
 codebook_df
 ``` 
 
+## Data exploration
+
+The first thing to do is to look at the distribution of the categories. The gender is the only nominal category. 
+
+```{r}
+gender_count <- ggplot(data = crab_data, aes(x=Sex, fill=Sex)) + geom_bar(fill = c('pink', 'green', 'blue'))
+gender_count + ggtitle("Distribution of the sex in the crab dataset")
+``` 
+
+```{r}
+summary(crab_data)
+```
+
+A boxplot with the categories in centimeters is made. First the data is reshaped to be able to plot them together.  
+
+```{r}
+
+cm_data <- melt(crab_data[2:4])
+ggplot(cm_data, aes(x=variable, y=value)) + geom_boxplot()
+
+```
+ 
+ The boxplots show that the height catagorie has a huge outlier. The same steps are taken with the weight categories.
+ 
+```{r}
+gram_data <- melt(crab_data[5:8])
+ggplot(gram_data, aes(x=variable, y=value)) + geom_boxplot()
+```
+The weight categories also have outliers. 
