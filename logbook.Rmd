@@ -37,3 +37,6 @@ Started analysing the specific data. Barplot for the distribution of the gender 
 
 Opstellen onderzoeksvraag: How accurately can you predict the age group of crabs based on physical properties and gender?
 
+#### 21-9-2023
+Lots of plots made to figure out what i want to explorer. Correlation heatmap, correlation plot, age distribution and age vs length. Trouble with age vs length, plotted line does not fit through the points. 
+
