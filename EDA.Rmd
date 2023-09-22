@@ -36,12 +36,19 @@ summary(crab_data)
 
 ```
 
-A quick summary shows that there are indeed 9 categories collected for 3893 entries. It also gives a first insight into the distribution of the data. The age of the crabs goes from 1 month to 29 months with a mean of 9.955 which suggest that most crabs are young compared to the oldest entry. A deeper exploration of the distribution will be done later. First there will be a check for missing data and a conversion to centimeters and grams.
+A quick summary shows that there are indeed 9 categories collected for 3893 entries. It also gives a first insight into the distribution of the data. The age of the crabs goes from 1 month to 29 months with a mean of 9.955 which suggest that most crabs are young compared to the oldest entry. A deeper exploration of the distribution will be done later. First there will be a check for missing data also in the form of zeros and a conversion to centimeters and grams.
  
 ```{r}
-sum(is.na(crab_data))
+colSums(is.na(crab_data))
+colSums(crab_data == 0)
 ```
-A sum of the NA values shows that there are no missing value which means the data set is complete for all categories. 
+A sum of the NA values shows that there are no missing value which means the data set is complete for all categories. The zero value sum shows that there are 2 crabs with the height of 0 which is impossible, especially considering that they do have a length and weight. Since this are only 2 entries in a dataset with 3893 datapoints and they can't be accurate we will remove them.
+
+```{r}
+crab_data = subset(crab_data, crab_data$Height != 0)
+nrow(crab_data)
+```
+A quick nrow count shows that the two zero height value rows have been succesfully removed. 
 
 The next step is conversion to centimeters and grams since that are the conventional metrics in the Netherlands where this EDA is conducted. 
 
@@ -76,16 +83,17 @@ gender_count <- ggplot(data = crab_data, aes(x=Sex, fill=Sex)) + geom_bar(fill =
 gender_count + ggtitle("Distribution of the sex in the crab dataset")
 ``` 
 
-```{r}
-summary(crab_data)
-```
-
 A boxplot with the categories in centimeters is made. First the data is reshaped to be able to plot them together.  
 
 ```{r}
 
 cm_data <- melt(crab_data[2:4])
-ggplot(cm_data, aes(x=variable, y=value)) + geom_boxplot()
+ggplot(cm_data, aes(x=variable, y=value, fill = variable)) +
+  geom_boxplot() +
+  ggtitle("Distribution plots of the size categories") +
+  ylab("Centimeters") +
+  #Removed the x axis title and legend since the variables speak for themselves
+  theme(axis.title.x = element_blank(), legend.position = "none")
 
 ```
  
@@ -93,17 +101,24 @@ ggplot(cm_data, aes(x=variable, y=value)) + geom_boxplot()
  
 ```{r}
 gram_data <- melt(crab_data[5:8])
-ggplot(gram_data, aes(x=variable, y=value)) + geom_boxplot()
+ggplot(gram_data, aes(x=variable, y=value, fill=variable)) + 
+  geom_boxplot() +
+  ggtitle("Distribution of the weight categories") +
+  ylab("Grams") +
+  #Again x axis title and legend removed due to the values speaking for themselves
+  theme(axis.title.x = element_blank(), legend.position = "none")
 ```
 The weight categories also have outliers. Next let's look at the distribution of the age through a histogram. 
 
 ```{r}
-ggplot(crab_data, aes(Age)) + geom_histogram()
+ggplot(crab_data, aes(Age)) + 
+  geom_histogram(binwidth =1, fill = "purple") +
+  ggtitle("Distribution of the age of the crabs")
 ```
 Most of the crabs appear to be younger then 10 years
 
 ```{r}
-ggpairs(crab_data)
+
 ```
 
 ```{r}
@@ -113,11 +128,53 @@ head(melted_cormat)
 ggplot(data = melted_cormat, aes(x=X1, y=X2, fill=value)) + 
   geom_tile()
 ```
+Since a regression model is out of scope for this research, the age group needs to be split in groups. A boxplot with the age as a group is made vs some of the physical properties. Then a point of interest is added with a line.
+```{r}
+ggplot(crab_data, aes(x=Age, y=Length, group=Age)) + 
+  geom_boxplot() +
+  geom_vline(xintercept = 11, color = "red") +
+  ggtitle("Length of crabs compared to the age")
+
+ggplot(crab_data, aes(x=Age, y=Weight, group=Age)) + 
+  geom_boxplot()+
+  geom_vline(xintercept = 11, color = "red") +
+  ggtitle("Weight of crabs compared to the age")
+
+
+ggplot(crab_data, aes(x=Age, y=Diameter, group=Age)) + 
+  geom_boxplot() + 
+  geom_vline(xintercept = 11, color = "red") +
+  ggtitle("Diameter of crabs compared to the age")
+
+ggplot(crab_data, aes(x=Age, y=Height, group=Age)) + 
+  geom_boxplot() +
+  geom_vline(xintercept = 11, color = "red") +
+  ggtitle("Height of crabs compared to the age")
+```
+The red line represents the age of 11 from where the growth seems to stagnate. With this in mind 2 groups are created, aged 1 through 10 months and 11 and above months.
 
 ```{r}
-ggplot(crab_data, aes(x=Length, y=Age)) + 
-  geom_point() +
-  geom_abline(color='red')
+crab_data$Age[crab_data$Age < 11] <- 1
+crab_data$Age[crab_data$Age > 10] <- 2
+
+crab_data$Age <- as.factor(crab_data$Age)
 ```
+
+The crab data age column has been changed to a 1 for 1 to 10 months and a 2 for 11 and above months. The age is then converted to a factor since it can only be 1 or 2. The age category has been overwritten since the actual age can not be used in machine learning purposes due to the fact that it is easily clear in what group the crab belongs. 
+
+A look at the new age distribution in a count barplot shows the following new distribution.
+```{r}
+ggplot(crab_data, aes(Age)) +
+  geom_bar(fill= c('red', 'blue')) +
+  geom_text(stat='count', aes(label=after_stat(count)), vjust = 3) +
+  ggtitle("Amount of crabs per age group") +
+ scale_x_discrete(labels = c("1 to 10 months", "11 months and above"))
+```
+The barplot shows that there are 2531 crabs under the age of 11 months and 1362 crabs 11 months or older. Most crabs are young (under 11 months) but the second group should be large enough for machine learning. 
+
+
+
+
+
 
 
