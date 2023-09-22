@@ -40,3 +40,7 @@ Opstellen onderzoeksvraag: How accurately can you predict the age group of crabs
 #### 21-9-2023
 Lots of plots made to figure out what i want to explorer. Correlation heatmap, correlation plot, age distribution and age vs length. Trouble with age vs length, plotted line does not fit through the points. 
 
+#### 22-9-2023
+Exploring options for making age groups, comparing length, weight, diameter and height to age. Cut off point at the age of 11 is made to split the data. 
+Count barplot is made to see the new age distribution. All the desired graphs are given beter visuals like titles colors etc.
+
