@@ -9,6 +9,7 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 library(reshape)
+library(GGally)
 
 ```
 
@@ -94,4 +95,29 @@ ggplot(cm_data, aes(x=variable, y=value)) + geom_boxplot()
 gram_data <- melt(crab_data[5:8])
 ggplot(gram_data, aes(x=variable, y=value)) + geom_boxplot()
 ```
-The weight categories also have outliers. 
+The weight categories also have outliers. Next let's look at the distribution of the age through a histogram. 
+
+```{r}
+ggplot(crab_data, aes(Age)) + geom_histogram()
+```
+Most of the crabs appear to be younger then 10 years
+
+```{r}
+ggpairs(crab_data)
+```
+
+```{r}
+cormat <- round(cor(crab_data[,2:9]),2)
+melted_cormat <- melt(cormat)
+head(melted_cormat)
+ggplot(data = melted_cormat, aes(x=X1, y=X2, fill=value)) + 
+  geom_tile()
+```
+
+```{r}
+ggplot(crab_data, aes(x=Length, y=Age)) + 
+  geom_point() +
+  geom_abline(color='red')
+```
+
+
