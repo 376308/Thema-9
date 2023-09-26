@@ -44,3 +44,6 @@ Lots of plots made to figure out what i want to explorer. Correlation heatmap, c
 Exploring options for making age groups, comparing length, weight, diameter and height to age. Cut off point at the age of 11 is made to split the data. 
 Count barplot is made to see the new age distribution. All the desired graphs are given beter visuals like titles colors etc.
 
+#### 26-9-2023
+Added pairplot and correlation heatmap. Gave further details to graphs like titles and fixed axis. Made codebook a table and changed codebook after editting the age groups. 
+
