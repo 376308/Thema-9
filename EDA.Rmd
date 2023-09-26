@@ -5,12 +5,17 @@ date: "2023-09-13"
 output: pdf_document
 ---
 
+/*
+* Copyright (c) 2023 Larissa Bouwknegt.
+* Licensed under GPLv3. See gpl.md
+*/
+
 ```{r setup, include=FALSE}
+
 knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 library(reshape)
 library(GGally)
-
 ```
 
 ## Introduction
@@ -18,6 +23,7 @@ library(GGally)
 
 ## First look and preperation
 The data set contains the data of 3893 crabs, with data in 9 categories. The 9 categories data was collected in are, this will later be added to a codebook:
+
 - Sex (gender of the crab)
 - Length (length of the crab in feet)
 - Diameter (diameter of the crab in feet)
@@ -68,20 +74,40 @@ The values in the desired columns have changed so the conversions seem to have w
 
 The next step is to make a codebook for readability and easy labeling. The codebook is made by using the colnames of the crab_data dataframe as the attributes and manually adding the units and descriptions to it.  
 ```{r}
-codebook <- list("Attribute" = c(colnames(crab_data)), "Units" = c("-", "cm", "cm", "cm", "gram", "gram", "gram", "gram", "months"), "Description" = c("Gender of the crab, female(F), male(M) or interderminate(I)", "Lenght of the crab in centimeters", "Diameter of the crab in centimeters", "Height of the crab in centimeters", "Weight of the crab in grams", "Weight without the shell in grams", "Weight that wraps around your abdominal organs deep inside body in grams", "Weight of the shell in grams", "Age of the crab in months"))
+codebook <- list("Attribute" = c(colnames(crab_data)),
+                 "Units" = c("-", "cm", "cm", "cm", "gram",
+                             "gram", "gram", "gram", "months"),
+                 "Description" =
+                   c("Gender of the crab, 
+                     female(F) male(M) or interderminate(I)",
+                     "Lenght of the crab in centimeters",
+                     "Diameter of the crab in centimeters",
+                     "Height of the crab in centimeters",
+                     "Weight of the crab in grams",
+                     "Weight without the shell in grams",
+                     "Weight that wraps around your abdominal
+                     organs deep inside body in grams",
+                     "Weight of the shell in grams",
+                     "Age of the crab in months"))
 
 codebook_df <- as.data.frame(codebook)
-codebook_df
+
+knitr::kable(codebook_df, format = "latex")
 ``` 
 
 ## Data exploration
 
-The first thing to do is to look at the distribution of the categories. The gender is the only nominal category. 
+The first thing to do is to look at the distribution of the categories. The gender is the only nominal category for now, we will change the age category later. 
 
 ```{r}
-gender_count <- ggplot(data = crab_data, aes(x=Sex, fill=Sex)) + geom_bar(fill = c('pink', 'green', 'blue'))
-gender_count + ggtitle("Distribution of the sex in the crab dataset")
+gender_count <- ggplot(data = crab_data, 
+                       aes(x=Sex, fill=Sex)) + 
+  geom_bar(fill = c('pink', 'green', 'blue'))
+gender_count + 
+  ggtitle("Distribution of the sex in the crab dataset") +
+  scale_x_discrete(labels = c("Female", "Inderterminate", "Male"))
 ``` 
+The barplot shows a fairly even distribution between the sexes and indertiminate sex, there seem to be a bit more males. 
 
 A boxplot with the categories in centimeters is made. First the data is reshaped to be able to plot them together.  
 
@@ -97,7 +123,14 @@ ggplot(cm_data, aes(x=variable, y=value, fill = variable)) +
 
 ```
  
- The boxplots show that the height catagorie has a huge outlier. The same steps are taken with the weight categories.
+ The boxplots show that each categorie has some outliers but the height category has 2 extreme outliers with no corresponding outliers in the other categories. Since it are only 2 rows and it seems unlikely that these crabs with these porportions exist they will be removed.
+ 
+```{r}
+crab_data = subset(crab_data, crab_data$Height < 30)
+nrow(crab_data)
+```
+ 
+ A quick nrow shows us that we indeed have removed 2 rows again. The same boxplots as with the length categories are made with the weight categories.
  
 ```{r}
 gram_data <- melt(crab_data[5:8])
@@ -108,27 +141,16 @@ ggplot(gram_data, aes(x=variable, y=value, fill=variable)) +
   #Again x axis title and legend removed due to the values speaking for themselves
   theme(axis.title.x = element_blank(), legend.position = "none")
 ```
-The weight categories also have outliers. Next let's look at the distribution of the age through a histogram. 
+The weight categories also have outliers but they do not seem extreme. Next let's look at the distribution of the age through a histogram. 
 
 ```{r}
 ggplot(crab_data, aes(Age)) + 
   geom_histogram(binwidth =1, fill = "purple") +
   ggtitle("Distribution of the age of the crabs")
 ```
-Most of the crabs appear to be younger then 10 years
+Most of the crabs appear to be younger then 10 years and there are verry little crabs older then 20 months. 
 
-```{r}
-
-```
-
-```{r}
-cormat <- round(cor(crab_data[,2:9]),2)
-melted_cormat <- melt(cormat)
-head(melted_cormat)
-ggplot(data = melted_cormat, aes(x=X1, y=X2, fill=value)) + 
-  geom_tile()
-```
-Since a regression model is out of scope for this research, the age group needs to be split in groups. A boxplot with the age as a group is made vs some of the physical properties. Then a point of interest is added with a line.
+Since a regression model is out of scope for this research and we want to predict the age, the age group needs to be split in groups. A boxplot with the age as a group is made vs some of the physical properties. Then a point of interest is added with a line.
 ```{r}
 ggplot(crab_data, aes(x=Age, y=Length, group=Age)) + 
   geom_boxplot() +
@@ -151,7 +173,7 @@ ggplot(crab_data, aes(x=Age, y=Height, group=Age)) +
   geom_vline(xintercept = 11, color = "red") +
   ggtitle("Height of crabs compared to the age")
 ```
-The red line represents the age of 11 from where the growth seems to stagnate. With this in mind 2 groups are created, aged 1 through 10 months and 11 and above months.
+The red line represents the age of 11 from where the growth seems to stagnate in all of the 4 categories. With this in mind 2 groups of crabs are created, aged 1 through 10 months and 11 and above months.
 
 ```{r}
 crab_data$Age[crab_data$Age < 11] <- 1
@@ -170,10 +192,40 @@ ggplot(crab_data, aes(Age)) +
   ggtitle("Amount of crabs per age group") +
  scale_x_discrete(labels = c("1 to 10 months", "11 months and above"))
 ```
-The barplot shows that there are 2531 crabs under the age of 11 months and 1362 crabs 11 months or older. Most crabs are young (under 11 months) but the second group should be large enough for machine learning. 
+The barplot shows that there are 2527 crabs under the age of 11 months and 1362 crabs 11 months or older. Most crabs are young (under 11 months) but the second group should be large enough for machine learning. 
+
+The codebook needs to be updated now
 
 
+```{r}
+codebook_df$Units[codebook_df$Attribute == "Age"] <- "-"
+codebook_df$Description[codebook_df$Attribute == "Age"] <- "Age group, 1 for 1 to 10 months and 2 for 11+ months"
 
+knitr::kable(codebook_df, format = "latex")
+
+
+```
+
+Next a pair plot is made with the continuous categories and the points are colored in with the age groups. 
+
+```{r}
+ggpairs(crab_data, columns = 2:8, aes(color=Age, alpha=0.3), upper = list(continuous = "points"))
+```
+
+The pair plot shows that the young crabs under 11 months colored in red are mostly at the left side of the graph and the crabs which are 11+ months colored in blue are mostly on the right side in the graphs. The middle part does not show a clear line between red and blue which means that it can be harder to predict with machine learning. There seem to be some correlation between the different categories, especially the length compared to the diameter. Let's look deeper into the correlations with a correlation heatmap. 
+
+```{r}
+cormat <- round(cor(crab_data[2:8]), 2)
+melted_cormat <- melt(cormat)
+ggplot(melted_cormat, aes(x=X1, y=X2, fill=value)) +
+  geom_tile() +
+  ggtitle("Correlation heatmap of continuous crab data") +
+  theme(axis.text.x = element_text(angle = -90))
+```
+The lowest correlation seems to be between the shucked weight and the height, but this is still around 0.84 which suggest they are correlated. The category that seems to be correlating the most is the weight category, not only does it get high correlation scores in the weight categories but also the lenght and diameter seem te be of importance.  
+
+## Conclussion
+The data was already very clean but was cleaned further bij removing 2 extreme outliers and 2 zero values. There seems to be some correlation based on pair plots and heatplots. The pair plot seems to show the separation of the 2 age categories up to some degree with a bit of a less defined seperation in the middle. All by all does it seem to be a good dataset to answer the question: "How accurately can you predict the age group of crabs based on physical properties and gender?". 
 
 
 
