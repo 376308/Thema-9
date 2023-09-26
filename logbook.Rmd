@@ -1,5 +1,5 @@
 ---
-title: "Logboek"
+title: "Logbook"
 author: "Larissa Bouwknegt"
 date: "2023-09-13"
 output: pdf_document
@@ -10,5 +10,40 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
+#### 13-9-2023:
 
+Picked a data set:\newline
+https://www.kaggle.com/datasets/sidhus/crab-age-prediction
+\newline
+
+Data set about predicting the age of crabs based on physical features.  
+
+Setup of the repository, added logbook to repository. Made sure no direct commits could be made to main. 
+
+Start of the EDA. Written introduction and basic information about the data set. Loaded in the data, got a summary and checked for NA values. Conversion to other metric system (inches to centimeters, ounces to grams). 
+
+For more detailed steps on how this was done see the EDA.
+
+
+#### 15-9-2023
+Added a codebook through a tutorial on: https://www.adrianbruegger.com/post/simple-codebook/ 
+
+Some problems with the needed packages, tried to update R studio, R and the installed packages, took some time to get the newest version of R working and re install all the packages required. Read through the example notebooks for inspiration. 
+
+Decided not to use this tutorial due to not easily editable the way as preffered. New codebook made with hand filled units and descriptions added to the exsisting collumn names in the origional dataframe. 
+
+#### 20-9-2023
+Started analysing the specific data. Barplot for the distribution of the gender was made and a reshape and boxplot for the length and weight categories was made. 
+
+Opstellen onderzoeksvraag: How accurately can you predict the age group of crabs based on physical properties and gender?
+
+#### 21-9-2023
+Lots of plots made to figure out what i want to explorer. Correlation heatmap, correlation plot, age distribution and age vs length. Trouble with age vs length, plotted line does not fit through the points. 
+
+#### 22-9-2023
+Exploring options for making age groups, comparing length, weight, diameter and height to age. Cut off point at the age of 11 is made to split the data. 
+Count barplot is made to see the new age distribution. All the desired graphs are given beter visuals like titles colors etc.
+
+#### 26-9-2023
+Added pairplot and correlation heatmap. Gave further details to graphs like titles and fixed axis. Made codebook a table and changed codebook after editting the age groups. 
 
