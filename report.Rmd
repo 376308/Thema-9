@@ -1,0 +1,19 @@
+---
+title: "Results, Conclusion and discusion"
+author: "Larissa Bouwknegt"
+date: "2023-09-29"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Results
+
+```{r}
+crab_data <- read.csv("CrabAgePrediction.csv")
+knitr::kable(summary(crab_data))
+```
+
