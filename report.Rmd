@@ -1,19 +1,206 @@
 ---
-title: "Results, Conclusion and discusion"
+title: "Results, Conclusion and discussion"
 author: "Larissa Bouwknegt"
 date: "2023-09-29"
 output: pdf_document
+header-includes:
+  - "\\usepackage{float}"
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, 
+                      out.width = '80%', 
+                      fig.pos = 'H',
+                      warning = FALSE,
+                      message = FALSE)
+library(kableExtra)
+library(ggplot2)
+library(reshape)
+library(GGally)
 ```
 
 
 ## Results
+After the data was loaded the dimensions of the dataset were looked at to get an first impression of the size and dimensions of the dataset. 
 
-```{r}
+```{r table1}
 crab_data <- read.csv("CrabAgePrediction.csv")
-knitr::kable(summary(crab_data))
+row_count <- nrow(crab_data)
+col_count <- ncol(crab_data)
+
+table_data <- data.frame(
+  Metric = c("Column count", "Row count"),
+  Count = c(col_count, row_count)
+)
+
+knitr::kable(
+  table_data, 
+  col.names = NULL, 
+  format = "simple", 
+  caption = "Dimensions of the crab data"
+)
 ```
 
+Table 1 shows that there are 9 variables with 3893 rows. The next step is determaining if the data is complete by looking at the zero and NA values.
+
+```{r table2}
+na_count <- colSums(is.na(crab_data))
+zero_count <- colSums(crab_data == 0)
+
+count_table <- data.frame(
+  zero_count,
+  na_count
+)
+
+knitr::kable(count_table, col.names = c("Zero count", "NA count"), format = "simple", caption = "Count of missing or incorrect values")
+```
+
+Table 2 shows that there are 2 crabs with a height of 0, this is impossible considering that they do have a weight and length so they are removed. 
+
+```{r}
+crab_data = subset(crab_data, crab_data$Height != 0)
+```
+
+```{r}
+crab_data[,c("Length", "Diameter", "Height" )] <- 
+  crab_data[,c("Length", "Diameter", "Height" )] * 30.48
+crab_data[,c("Weight", "Shucked.Weight", 
+             "Viscera.Weight", "Shell.Weight")] <- 
+  crab_data[,c("Weight", "Shucked.Weight", "Viscera.Weight", "Shell.Weight")] * 28.3495231
+```
+ 
+ 
+```{r}
+codebook <- list("Attribute" = c(colnames(crab_data)),
+                 "Units" = c("-", "cm", "cm", "cm", "gram",
+                             "gram", "gram", "gram", "months"),
+                 "Description" =
+                   c("Gender of the crab, 
+                     female(F) male(M) or interderminate(I)",
+                     "Lenght of the crab in centimeters",
+                     "Diameter of the crab in centimeters",
+                     "Height of the crab in centimeters",
+                     "Weight of the crab in grams",
+                     "Weight without the shell in grams",
+                     "Weight that wraps around your abdominal
+                     organs deep inside body in grams",
+                     "Weight of the shell in grams",
+                     "Age of the crab in months"))
+
+codebook_df <- as.data.frame(codebook)
+
+codebook_table <- knitr::kable(codebook_df, format = "latex", caption = "Codebook")
+#Needed to ensure the position of the table, will be placed elsewhere if not added
+kable_styling(codebook_table, latex_options = "HOLD_position")
+``` 
+The weight and length variables have been transformed to centimeters and grams instead of feet and ounces to comply with the local metric system. Table 3 shows all the variables for which data was collected and shows the unit and description of the variables. Since there are 2 nominal variables, sex and age, these are looked at first. 
+
+```{r crab_sex,fig.cap="Distribution of the age in the crab dataset"}
+gender_count <- ggplot(data = crab_data, 
+                       aes(x=Sex, fill=Sex)) + 
+  geom_bar(fill = c('pink', 'green', 'blue'))
+gender_count + 
+  ggtitle("Distribution of the sex in the crab dataset") +
+  scale_x_discrete(labels = c("Female", "Inderterminate", "Male"))
+``` 
+
+The barplot in figure 1 shows a fairly even distribution between the sexes and indertiminate sex, there seem to be a bit more males. 
+
+```{r crab_age, fig.cap="Distribution of the age within the crab data in months"}
+ggplot(crab_data, aes(Age)) + 
+  geom_histogram(binwidth =1, fill = "purple") +
+  ggtitle("Distribution of the age of the crabs")
+```
+
+Figure 2 shows a histogram with the age distribution. Most of the crabs appear to be younger then 10 years and there are verry little crabs older then 20 months. Next the distributions of the numeric atributes is looked at. 
+
+```{r, figures-side,  fig.show="hold", out.width="50%", fig.cap="Distribution of the numeric atributes in centimeters and grams"}
+
+cm_data <- melt(crab_data[2:4])
+ggplot(cm_data, aes(x=variable, y=value, fill = variable)) +
+  geom_boxplot() +
+  ggtitle("Distribution plots of the size variables") +
+  ylab("Centimeters") +
+  #Removed the x axis title and legend since the variables speak for themselves
+  theme(axis.title.x = element_blank(), legend.position = "none")
+
+gram_data <- melt(crab_data[5:8])
+ggplot(gram_data, aes(x=variable, y=value, fill=variable)) + 
+  geom_boxplot() +
+  ggtitle("Distribution of the weight variables") +
+  ylab("Grams") +
+  #Again x axis title and legend removed due to the values speaking for themselves
+  theme(axis.title.x = element_blank(), legend.position = "none")
+```
+
+ The boxplots in figure 3 show that each variable has some outliers but the height variable has 2 extreme outliers with no corresponding outliers in the other variables. Since it are only 2 rows and it seems unlikely that these crabs with these porportions exist they have been removed.
+ 
+```{r}
+crab_data = subset(crab_data, crab_data$Height < 30)
+```
+
+Since a regression model is out of scope for this research and we want to predict the age, the age group needs to be split in groups. A boxplot with the age as a group was made against some of the physical properties. Then a point of interest is added with a line.
+```{r, fig.show="hold", out.width="50%", fig.cap="Atributes distribution based on the age of crabs"}
+ggplot(crab_data, aes(x=Age, y=Length, group=Age)) + 
+  geom_boxplot() +
+  geom_vline(xintercept = 11, color = "red") +
+  ggtitle("Length of crabs compared to the age")
+
+ggplot(crab_data, aes(x=Age, y=Weight, group=Age)) + 
+  geom_boxplot()+
+  geom_vline(xintercept = 11, color = "red") +
+  ggtitle("Weight of crabs compared to the age")
+
+
+ggplot(crab_data, aes(x=Age, y=Diameter, group=Age)) + 
+  geom_boxplot() + 
+  geom_vline(xintercept = 11, color = "red") +
+  ggtitle("Diameter of crabs compared to the age")
+
+ggplot(crab_data, aes(x=Age, y=Height, group=Age)) + 
+  geom_boxplot() +
+  geom_vline(xintercept = 11, color = "red") +
+  ggtitle("Height of crabs compared to the age")
+```
+
+Figure 4 shows boxplots based on the age of crabs. The red line represents the age of 11 months from where the growth seems to stagnate in all of the 4 variables. With this in mind 2 groups of crabs are created, aged 1 through 10 months and 11 and above months. 
+
+```{r}
+crab_data$Age[crab_data$Age < 11] <- 1
+crab_data$Age[crab_data$Age > 10] <- 2
+
+crab_data$Age <- as.factor(crab_data$Age)
+```
+
+Next a pair plot is made with the continuous variables and the points are colored in with the age groups. 
+
+```{r, out.width='100%', fig.cap="Pairwise plot of the continuous atributes with the age as color"}
+ggpairs(crab_data,
+        columns = 2:8,
+        aes(color=Age, alpha=0.3),
+        upper = list(continuous = "points"),
+        legend = 1) +
+  theme(axis.text.x = element_text(size = 4), 
+        axis.text.y = element_text(size = 4), 
+        axis.title.x = element_text(size = 6),
+        strip.text.x = element_text(size = 6),
+        strip.text.y = element_text(size = 4.5),
+        legend.position = 'bottom',
+        ) +
+  scale_fill_discrete(labels = c("Under 11 months", "11 months and older"))
+
+
+```
+
+The pair plot in figure 5 shows that the young crabs under 11 months colored in red are mostly at the left side of the graph and the crabs which are 11+ months colored in blue are mostly on the right side in the graphs. The middle part does not show a clear line between red and blue which means that it can be harder to predict with machine learning. There seem to be correlation between the different variables, especially the length compared to the diameter. A deeper look was made in the correlation with a heatmap. 
+
+```{r, fig.cap="Heatmap of the continious variables and their correlation to each other"}
+cormat <- round(cor(crab_data[2:8]), 2)
+melted_cormat <- melt(cormat)
+ggplot(melted_cormat, aes(x=X1, y=X2, fill=value)) +
+  geom_tile() +
+  ggtitle("Correlation heatmap of continuous crab data") +
+  theme(axis.text.x = element_text(angle = -90))
+```
+
+The lowest correlation seems to be between the shucked weight and the height, but this is still around 0.84 which suggest they are correlated. The variable that seems to be correlating the most is the weight variable, not only does it get high correlation scores in the weight variables but also the length and diameter seem to be of importance.  
