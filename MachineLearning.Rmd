@@ -1,0 +1,59 @@
+---
+title: "Machine learning log"
+author: "Larissa Bouwknegt"
+date: "2023-10-06"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+When loading the data in Weka a filter (filters -> unsupervised -> NumericToNominal) needs to be applied to the age atribute to make sure the age atribute is nominal instead of numeric. Saving doesn't solve this problem, this needs to be done everytime weka was closed and opend again. The most common algorithms will be run with 10 fold cross validation  and be added to a table to see their individual performances without changed parameters. 
+
+```{r}
+algorithm_scores <- data.frame(algorithm = c("ZeroR", "OneR"),
+                               Percentage_Correct = c(64.9781, 73.9779),
+                               Percentage_Wrong = c(35.0219, 26.0221)
+                               )
+naive_bayes <- c("Naive Bayes", 68.1409, 31.8591)
+algorithm_scores <- rbind(algorithm_scores, naive_bayes)
+j48 <- c("j48", 75.495, 24.505)
+algorithm_scores <- rbind(algorithm_scores, j48)
+IBk <- c("IBk", 70.5837, 29.4163)
+algorithm_scores <- rbind(algorithm_scores, IBk)
+logistic <- c("Logistic", 77.7064, 22.2936)
+algorithm_scores <- rbind(algorithm_scores, logistic)
+suport_vector_machine <- c("SMO", 76.4464, 23.5536)
+algorithm_scores <- rbind(algorithm_scores, suport_vector_machine)
+qda <- c("QDA (sex atribute removed)", 75.7521, 24.2479)
+algorithm_scores <- rbind(algorithm_scores, qda)
+bagging <- c("Bagging", 77.7578, 22.2422)
+algorithm_scores <- rbind(algorithm_scores, bagging)
+voting <- c("Vote", 64.9781, 35.0219)
+algorithm_scores <- rbind(algorithm_scores, voting)
+adaboost <- c("AdaBoostM1", 72.1265, 27.8735)
+algorithm_scores <- rbind(algorithm_scores, adaboost)
+stacking <- c("Stacking", 64.9781, 35.0219)
+algorithm_scores <- rbind(algorithm_scores, stacking)
+random_forest <- c("Random Forest", 77.9121, 22.0879)
+algorithm_scores <- rbind(algorithm_scores, random_forest)
+clustering_class <- c("ClassificationViaClustering", 62.4839, 37.5161)
+algorithm_scores <- rbind(algorithm_scores, clustering_class)
+knitr::kable(algorithm_scores[order(algorithm_scores$Percentage_Correct, decreasing = TRUE),], row.names = F)
+```
+
+The table above is sorted on the best scoring algorithms without any parameters changed except for the QDA where the gender of the crabs was removed. All the tests were done with 10 fold cross validation. 3 algorithms scored even lower then or equal to zeroR which is interesting considering that it just takes the most prominent value. When further investigating the exact 2 scores same scores of voting and stacking to ZeroR the conclusion fell that we needed to specify the algorithms there. So these 2 were rerun with 11 algorithms, all of the above except for voting and stacking self and QDA was also not included due to the fact that we want to use the sex attribute. 
+
+```{r}
+rerun <- data.frame(algorithm = c("Voting", "Stacking with j48 meta"),
+                    Percentage_Correct = c(76.6264, 76.4207),
+                    Percentage_Wrong = c(23.3736, 23.5793))
+
+knitr::kable(rerun)
+```
+
+The results gained from voting and stacking seems to be much better now. The meta classifier used for stacking was a j48 tree. The meta learner randomforest takes some time but gives a 78.272 acuracy and 21.728 wrong. The best scoring algorithms are: Random forest, bagging, logistic, voting and SMO. For now we will look further into these 5 algorithms and see if we can optimize the parameters to prevent over fitting and get better results. 
+
+Since random forests are build on random trees lets
+
