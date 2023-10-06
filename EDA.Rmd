@@ -229,14 +229,46 @@ ggplot(melted_cormat, aes(x=X1, y=X2, fill=value)) +
 The lowest correlation seems to be between the shucked weight and the height, but this is still around 0.84 which suggest they are correlated. The variable that seems to be correlating the most is the weight variable, not only does it get high correlation scores in the weight variables but also the length and diameter seem to be of importance.  
 
 
-T toets per variabele tenopzichte van de Age, chi kwadraat ten opzichte van gender. 
+A T-Test per age group against the continuous variables was done to determinate which variables have the biggest difference in the mean since these would propably the best predicting variables in machine learning. 
+
+```{r}
+summary_table <- data.frame(
+  Column = character(),
+  Mean_Difference = numeric(),
+  stringsAsFactors = FALSE
+)
+
+last_column <- ncol(crab_data)
+
+
+for (i in 2:(last_column - 1)) {
+  col_name <- colnames(crab_data)[i]
+  
+  # Subset data for the two groups
+  group1_data <- crab_data[[col_name]][crab_data$Age == 1]
+  group2_data <- crab_data[[col_name]][crab_data$Age == 2]
+  
+  # Check if there is variation in data within the groups
+    t_test_result <- t.test(crab_data[[col_name]] ~ crab_data$Age)
+    mean_difference <- mean(group1_data) - mean(group2_data)
+  
+  # Append to the summary table
+  summary_table <- rbind(summary_table, data.frame(Column = col_name, Mean_Difference = mean_difference, stringsAsFactors = FALSE))
+}
+
+# Print the summary table
+knitr::kable(summary_table, caption = "Mean Differences between Groups")
+```
+The weight variables seem to have the biggest mean difference and will most likely be the best predictive variables in machine learning. 
+
+Finally the dataset is written off to a csv to be used in Weka for machine learning. 
 
 ```{r}
 write.csv(crab_data, "cleaned_data.csv", row.names = F)
 ```
 
 ## Conclusion
-The data was already very clean but was cleaned further bij removing 2 extreme outliers and 2 zero values. There seems to be a lot of correlation based on pair plots and heatplot. The pair plot seems to show the separation of the 2 age variables up to some degree with a bit of a less defined separation in the middle. All by all does it seem to be a good dataset to answer the question: "How accurately can you predict the age group of crabs based on physical properties and gender?". 
+The data was already very clean but was cleaned further by removing 2 extreme outliers and 2 zero values. There seems to be a lot of correlation based on pair plots and heatplot. The pair plot seems to show the separation of the 2 age variables up to some degree with a bit of a less defined separation in the middle. All by all does it seem to be a good dataset to answer the question: "How accurately can you predict the age group of crabs based on physical properties and gender?". 
 
 
 
