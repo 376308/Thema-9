@@ -22,7 +22,7 @@ library(GGally)
 "Crab age prediction" is a kaggle dataset (https://www.kaggle.com/datasets/sidhus/crab-age-prediction) with the physical properties and age of crabs farmed around Boston area. Crab is a food eaten and imported in many countries. Crab farming has low labor costs, production cost is comparatively lower and crabs grow fast. By knowing the right time to harvest crabs, when they mostly stop growing, profits can be maximized. This exploratory data analysis is to find connections between the different physical properties and the age of crabs. 
 
 ## First look and preperation
-The data set contains the data of 3893 crabs, with data in 9 categories. The 9 categories data was collected in are, this will later be added to a codebook:
+The data set contains the data of 3893 crabs, with data in 9 variables. The 9 variables data was collected in are, this will later be added to a codebook:
 
 - Sex (gender of the crab)
 - Length (length of the crab in feet)
@@ -42,13 +42,13 @@ summary(crab_data)
 
 ```
 
-A quick summary shows that there are indeed 9 categories collected for 3893 entries. It also gives a first insight into the distribution of the data. The age of the crabs goes from 1 month to 29 months with a mean of 9.955 which suggest that most crabs are young compared to the oldest entry. A deeper exploration of the distribution will be done later. First there will be a check for missing data also in the form of zeros and a conversion to centimeters and grams.
+A quick summary shows that there are indeed 9 variables collected for 3893 entries. It also gives a first insight into the distribution of the data. The age of the crabs goes from 1 month to 29 months with a mean of 9.955 which suggest that most crabs are young compared to the oldest entry. A deeper exploration of the distribution will be done later. First there will be a check for missing data also in the form of zeros and a conversion to centimeters and grams.
  
 ```{r}
 colSums(is.na(crab_data))
 colSums(crab_data == 0)
 ```
-A sum of the NA values shows that there are no missing value which means the data set is complete for all categories. The zero value sum shows that there are 2 crabs with the height of 0 which is impossible, especially considering that they do have a length and weight. Since this are only 2 entries in a dataset with 3893 datapoints and they can't be accurate we will remove them.
+A sum of the NA values shows that there are no missing value which means the data set is complete for all variables. The zero value sum shows that there are 2 crabs with the height of 0 which is impossible, especially considering that they do have a length and weight. Since this are only 2 entries in a dataset with 3893 datapoints and they can't be accurate we will remove them.
 
 ```{r}
 crab_data = subset(crab_data, crab_data$Height != 0)
@@ -58,11 +58,14 @@ A quick nrow count shows that the two zero height value rows have been succesful
 
 The next step is conversion to centimeters and grams since that are the conventional metrics in the Netherlands where this EDA is conducted. 
 
-1 foot equals 30.48 centimeters and 1 ounces equals 28.3495231 grams, this can then be applied to the correct categories with simple indexing and concatenation.
+1 foot equals 30.48 centimeters and 1 ounces equals 28.3495231 grams, this can then be applied to the correct variables with simple indexing and concatenation.
 
 ```{r}
-crab_data[,c("Length", "Diameter", "Height" )] <- crab_data[,c("Length", "Diameter", "Height" )] * 30.48
-crab_data[,c("Weight", "Shucked.Weight", "Viscera.Weight", "Shell.Weight")] <- crab_data[,c("Weight", "Shucked.Weight", "Viscera.Weight", "Shell.Weight")] * 28.3495231
+crab_data[,c("Length", "Diameter", "Height" )] <- 
+  crab_data[,c("Length", "Diameter", "Height" )] * 30.48
+crab_data[,c("Weight", "Shucked.Weight", 
+             "Viscera.Weight", "Shell.Weight")] <- 
+  crab_data[,c("Weight", "Shucked.Weight", "Viscera.Weight", "Shell.Weight")] * 28.3495231
 ```
 
 To check if the conversion worked the head is looked at.
@@ -97,7 +100,7 @@ knitr::kable(codebook_df, format = "latex")
 
 ## Data exploration
 
-The first thing to do is to look at the distribution of the categories. The gender is the only nominal category for now, we will change the age category later. 
+The first thing to do is to look at the distribution of the variables. The gender is the only nominal variable for now, we will change the age variable later. 
 
 ```{r}
 gender_count <- ggplot(data = crab_data, 
@@ -109,39 +112,39 @@ gender_count +
 ``` 
 The barplot shows a fairly even distribution between the sexes and indertiminate sex, there seem to be a bit more males. 
 
-A boxplot with the categories in centimeters is made. First the data is reshaped to be able to plot them together.  
+A boxplot with the variables in centimeters is made. First the data is reshaped to be able to plot them together.  
 
 ```{r}
 
 cm_data <- melt(crab_data[2:4])
 ggplot(cm_data, aes(x=variable, y=value, fill = variable)) +
   geom_boxplot() +
-  ggtitle("Distribution plots of the size categories") +
+  ggtitle("Distribution plots of the size variables") +
   ylab("Centimeters") +
   #Removed the x axis title and legend since the variables speak for themselves
   theme(axis.title.x = element_blank(), legend.position = "none")
 
 ```
  
- The boxplots show that each categorie has some outliers but the height category has 2 extreme outliers with no corresponding outliers in the other categories. Since it are only 2 rows and it seems unlikely that these crabs with these porportions exist they will be removed.
+ The boxplots show that each categorie has some outliers but the height variable has 2 extreme outliers with no corresponding outliers in the other variables. Since it are only 2 rows and it seems unlikely that these crabs with these porportions exist they will be removed.
  
 ```{r}
 crab_data = subset(crab_data, crab_data$Height < 30)
 nrow(crab_data)
 ```
  
- A quick nrow shows us that we indeed have removed 2 rows again. The same boxplots as with the length categories are made with the weight categories.
+ A quick nrow shows us that we indeed have removed 2 rows again. The same boxplots as with the length variables are made with the weight variables.
  
 ```{r}
 gram_data <- melt(crab_data[5:8])
 ggplot(gram_data, aes(x=variable, y=value, fill=variable)) + 
   geom_boxplot() +
-  ggtitle("Distribution of the weight categories") +
+  ggtitle("Distribution of the weight variables") +
   ylab("Grams") +
   #Again x axis title and legend removed due to the values speaking for themselves
   theme(axis.title.x = element_blank(), legend.position = "none")
 ```
-The weight categories also have outliers but they do not seem extreme. Next let's look at the distribution of the age through a histogram. 
+The weight variables also have outliers but they do not seem extreme. Next let's look at the distribution of the age through a histogram. 
 
 ```{r}
 ggplot(crab_data, aes(Age)) + 
@@ -151,7 +154,7 @@ ggplot(crab_data, aes(Age)) +
 Most of the crabs appear to be younger then 10 years and there are verry little crabs older then 20 months. 
 
 Since a regression model is out of scope for this research and we want to predict the age, the age group needs to be split in groups. A boxplot with the age as a group is made vs some of the physical properties. Then a point of interest is added with a line.
-```{r}
+```{r, figures-side, fig.show="hold", out.width="50%"}
 ggplot(crab_data, aes(x=Age, y=Length, group=Age)) + 
   geom_boxplot() +
   geom_vline(xintercept = 11, color = "red") +
@@ -173,7 +176,7 @@ ggplot(crab_data, aes(x=Age, y=Height, group=Age)) +
   geom_vline(xintercept = 11, color = "red") +
   ggtitle("Height of crabs compared to the age")
 ```
-The red line represents the age of 11 from where the growth seems to stagnate in all of the 4 categories. With this in mind 2 groups of crabs are created, aged 1 through 10 months and 11 and above months.
+The red line represents the age of 11 from where the growth seems to stagnate in all of the 4 variables. With this in mind 2 groups of crabs are created, aged 1 through 10 months and 11 and above months.
 
 ```{r}
 crab_data$Age[crab_data$Age < 11] <- 1
@@ -182,7 +185,7 @@ crab_data$Age[crab_data$Age > 10] <- 2
 crab_data$Age <- as.factor(crab_data$Age)
 ```
 
-The crab data age column has been changed to a 1 for 1 to 10 months and a 2 for 11 and above months. The age is then converted to a factor since it can only be 1 or 2. The age category has been overwritten since the actual age can not be used in machine learning purposes due to the fact that it is easily clear in what group the crab belongs. 
+The crab data age column has been changed to a 1 for 1 to 10 months and a 2 for 11 and above months. The age is then converted to a factor since it can only be 1 or 2. The age variable has been overwritten since the actual age can not be used in machine learning purposes due to the fact that it is easily clear in what group the crab belongs. 
 
 A look at the new age distribution in a count barplot shows the following new distribution.
 ```{r}
@@ -206,13 +209,14 @@ knitr::kable(codebook_df, format = "latex")
 
 ```
 
-Next a pair plot is made with the continuous categories and the points are colored in with the age groups. 
+Next a pair plot is made with the continuous variables and the points are colored in with the age groups. 
 
 ```{r}
-ggpairs(crab_data, columns = 2:8, aes(color=Age, alpha=0.3), upper = list(continuous = "points"))
+ggpairs(crab_data, columns = 2:8, aes(color=Age, alpha=0.3), upper = list(continuous = "points")) +
+  theme(axis.text.x = element_text(size = 4), axis.text.y = element_text(size = 4), axis.title.x = element_text(size = 6))
 ```
 
-The pair plot shows that the young crabs under 11 months colored in red are mostly at the left side of the graph and the crabs which are 11+ months colored in blue are mostly on the right side in the graphs. The middle part does not show a clear line between red and blue which means that it can be harder to predict with machine learning. There seem to be some correlation between the different categories, especially the length compared to the diameter. Let's look deeper into the correlations with a correlation heatmap. 
+The pair plot shows that the young crabs under 11 months colored in red are mostly at the left side of the graph and the crabs which are 11+ months colored in blue are mostly on the right side in the graphs. The middle part does not show a clear line between red and blue which means that it can be harder to predict with machine learning. There seem to be some correlation between the different variables, especially the length compared to the diameter. Let's look deeper into the correlations with a correlation heatmap. 
 
 ```{r}
 cormat <- round(cor(crab_data[2:8]), 2)
@@ -222,10 +226,49 @@ ggplot(melted_cormat, aes(x=X1, y=X2, fill=value)) +
   ggtitle("Correlation heatmap of continuous crab data") +
   theme(axis.text.x = element_text(angle = -90))
 ```
-The lowest correlation seems to be between the shucked weight and the height, but this is still around 0.84 which suggest they are correlated. The category that seems to be correlating the most is the weight category, not only does it get high correlation scores in the weight categories but also the lenght and diameter seem te be of importance.  
+The lowest correlation seems to be between the shucked weight and the height, but this is still around 0.84 which suggest they are correlated. The variable that seems to be correlating the most is the weight variable, not only does it get high correlation scores in the weight variables but also the length and diameter seem to be of importance.  
 
-## Conclussion
-The data was already very clean but was cleaned further bij removing 2 extreme outliers and 2 zero values. There seems to be some correlation based on pair plots and heatplots. The pair plot seems to show the separation of the 2 age categories up to some degree with a bit of a less defined seperation in the middle. All by all does it seem to be a good dataset to answer the question: "How accurately can you predict the age group of crabs based on physical properties and gender?". 
+
+A T-Test per age group against the continuous variables was done to determinate which variables have the biggest difference in the mean since these would propably the best predicting variables in machine learning. 
+
+```{r}
+summary_table <- data.frame(
+  Column = character(),
+  Mean_Difference = numeric(),
+  stringsAsFactors = FALSE
+)
+
+last_column <- ncol(crab_data)
+
+
+for (i in 2:(last_column - 1)) {
+  col_name <- colnames(crab_data)[i]
+  
+  # Subset data for the two groups
+  group1_data <- crab_data[[col_name]][crab_data$Age == 1]
+  group2_data <- crab_data[[col_name]][crab_data$Age == 2]
+  
+  # Check if there is variation in data within the groups
+    t_test_result <- t.test(crab_data[[col_name]] ~ crab_data$Age)
+    mean_difference <- mean(group1_data) - mean(group2_data)
+  
+  # Append to the summary table
+  summary_table <- rbind(summary_table, data.frame(Column = col_name, Mean_Difference = mean_difference, stringsAsFactors = FALSE))
+}
+
+# Print the summary table
+knitr::kable(summary_table, caption = "Mean Differences between Groups")
+```
+The weight variables seem to have the biggest mean difference and will most likely be the best predictive variables in machine learning. 
+
+Finally the dataset is written off to a csv to be used in Weka for machine learning. 
+
+```{r}
+write.csv(crab_data, "cleaned_data.csv", row.names = F)
+```
+
+## Conclusion
+The data was already very clean but was cleaned further by removing 2 extreme outliers and 2 zero values. There seems to be a lot of correlation based on pair plots and heatplot. The pair plot seems to show the separation of the 2 age variables up to some degree with a bit of a less defined separation in the middle. All by all does it seem to be a good dataset to answer the question: "How accurately can you predict the age group of crabs based on physical properties and gender?". 
 
 
 
