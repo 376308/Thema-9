@@ -4,13 +4,17 @@ author: "Larissa Bouwknegt"
 date: "2023-09-29"
 output: pdf_document
 header-includes:
-  - "\\usepackage{float}"
+  - \usepackage{float}
+  - \floatplacement{figure}{H} 
+bibliography: references.bib
+nocite: '@*'
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, 
                       out.width = '80%', 
                       fig.pos = 'H',
+                      out.extra = "",
                       warning = FALSE,
                       message = FALSE)
 library(kableExtra)
@@ -194,13 +198,61 @@ ggpairs(crab_data,
 
 The pair plot in figure 5 shows that the young crabs under 11 months colored in red are mostly at the left side of the graph and the crabs which are 11+ months colored in blue are mostly on the right side in the graphs. The middle part does not show a clear line between red and blue which means that it can be harder to predict with machine learning. There seem to be correlation between the different variables, especially the length compared to the diameter. A deeper look was made in the correlation with a heatmap. 
 
-```{r, fig.cap="Heatmap of the continious variables and their correlation to each other"}
+```{r, fig.cap="Heatmap of the continious variables and their correlation to each other", fig.align='center'}
 cormat <- round(cor(crab_data[2:8]), 2)
 melted_cormat <- melt(cormat)
 ggplot(melted_cormat, aes(x=X1, y=X2, fill=value)) +
   geom_tile() +
   ggtitle("Correlation heatmap of continuous crab data") +
-  theme(axis.text.x = element_text(angle = -90))
+  theme(axis.text.x = element_text(angle = -90))+
+  scale_fill_gradient(limits = c(0.5, 1), name = "Correlation", low = 'white', high = 'darkblue')
+
 ```
 
-The lowest correlation seems to be between the shucked weight and the height, but this is still around 0.84 which suggest they are correlated. The variable that seems to be correlating the most is the weight variable, not only does it get high correlation scores in the weight variables but also the length and diameter seem to be of importance.  
+Figure 6 shows that the lowest correlation seems to be between the shucked weight and the height, but this is still around 0.8 which suggest they are correlated. The variable that seems to be correlating the most is the weight variable, not only does it get high correlation scores in the weight variables but also the length and diameter seem to be of importance.  
+
+Lastly the mean difference between the age groups and the continuous variables was looked at to see which categories are most likely to be used as a predictive variable in machine learning.
+
+
+```{r}
+summary_table <- data.frame(
+  Column = character(),
+  Mean_Difference = numeric(),
+  stringsAsFactors = FALSE
+)
+
+last_column <- ncol(crab_data)
+
+
+for (i in 2:(last_column - 1)) {
+  col_name <- colnames(crab_data)[i]
+  
+  # Subset data for the two groups
+  group1_data <- crab_data[[col_name]][crab_data$Age == 1]
+  group2_data <- crab_data[[col_name]][crab_data$Age == 2]
+  
+  # Check if there is variation in data within the groups
+    t_test_result <- t.test(crab_data[[col_name]] ~ crab_data$Age)
+    mean_difference <- mean(group1_data) - mean(group2_data)
+  
+  # Append to the summary table
+  summary_table <- rbind(summary_table, data.frame(Column = col_name, Mean_Difference = mean_difference, stringsAsFactors = FALSE))
+}
+
+# Print the summary table
+knitr::kable(summary_table, caption = "Mean Differences between Groups", latex_options = "HOLD_position", format = 'simple')
+```
+
+Table 4 shows that the weight variables seem to have the biggest mean difference and will most likely be the best predictive variables in machine learning. 
+\newpage
+
+## Conclusion and discussion 
+The data collected from kaggle *[@sidhu_2021]* has a score of 10 on usability. When looking at missing values none where to be found. A look at zero values gave 2 results which is impossible considering the height of a crab would never be zero. The height had 2 other extreme instances as wel which were also removed. With these changes it seems like a complete dataset which is clearly usable for machine learning, it is no suprise people gave this dataset a 10 for usability. There seems to be correlation within the different categories and there is a clear change where growth of crabs stagnates at the age of 11 months. Considering that the dataset is split in 2 groups now within different growth stadiums, predicting them should be possible to a certain degree. The question "How accurate can you predict the age group of crabs based on physical properties and the gender?" should be answerable with the dataset in the current state. 
+
+The dataset lacks the species of crabs, it is unclear if it are varying species or just one, all that can be found on kaggle*[@sidhu_2021]* is that it are crabs collected in the Boston area. Are this crabs grown on a farm or random crabs found on the beach with a predicted age? Details like that could possibly help a machine learning algorithm considering that if there are multiple species they would probably have their own growth curves. It could be interesting to compare this dataset to one which does have the species and see if that makes a difference in the future machine learning algorithm. 
+
+\newpage
+<!-- (References) -->
+# References {-}
+<div id="refs"></div>
+
