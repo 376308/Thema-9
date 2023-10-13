@@ -86,3 +86,52 @@ selected_results <- data.frame(algorithm = c("Random Tree",
                                Shell.Weight"))
 knitr::kable(selected_results, format = "simple")
 ```
+4 sub sets are made, based on the 3 algorithms and the cfssubseteval. These are then tested in the explorer against each other.
+
+The following are the results of a T test where the different datasets are tested with the percentage correct for the algorithms. This shows that the 4th smaller dataset scores significantly worse in all the algorithms and the 2nd and 3rd cleaned datasets when it comes to a random forest. 
+![](Ttestswapresults.png)
+
+The are under the curve shows us that the area under the curve is even significantly worse with all the smaller datasets for 2 different algorithms. The last smaller dataset is  worse for all algorithms. 
+![](TtestswapresultsAOC.png)
+
+So lets focus on how the 5 algorithms scored compared to the whole dataset. Since stacking has the highest score this algorithm is used as the comparison. 
+
+![](Stacking.png)
+
+![](StackingAUC.png)
+
+Vote scores significantly worse then stacking. When looking at the area under the curve stacking scores worse as well on the original dataset. 
+
+So lets see if we can tweak the 4 algorithms without vote a bit more on the original dataset. 
+
+Let's start with the random forest, since it is build on random trees we will try to improve an individual tree before 
+
+```{r}
+tree_scores <- data.frame(tree_depth = c("unlimited",
+                                         "5",
+                                         "6",
+                                         "7",
+                                         "8"),
+                          percentage_corect = c(70.6351,
+                                                74.1322,
+                                                75.0064,
+                                                75.6236,
+                                                74.775))
+
+knitr::kable(tree_scores, format = "simple")
+```
+The table shows the changes to the depth of the tree parameter and how they corresponded to the percentage correct with 10 fold cross validation. Now lets build a forest with trees with a depth of 7 since this seems to be the best parameter score wise. A forest with the depth of 7 gives a 78.5035 percent accuracy. By increasing the trees used under the iteration value to a 1000 instead of the standard 100 we get a 78.7349 percent accuracy. Increasin this to 10000 does take a lot more time and does not improve the score at all. 
+
+By bagging we can change the number of iterations:
+
+```{r}
+bagging_itter <- data.frame(itterations = c("10",
+                                            "100",
+                                            "1000"),
+                            percentage_correct = c(77.7578,
+                                                   78.2206,
+                                                   78.1435))
+
+knitr::kable(bagging_itter, format = "simple")
+```
+Changing the number of iterations improves it when it is set to a 100 but decreases when set to a 1000. A 1000 iterations also takes more time and it is getting on the long side there with a time of 20.8 to build the model. SO bagging seems to be optimal at a 100 iterations for now. 
