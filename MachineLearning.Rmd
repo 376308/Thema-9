@@ -7,6 +7,8 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(RWeka)
+library(ggplot2)
 ```
 
 When loading the data in Weka a filter (filters -> unsupervised -> NumericToNominal) needs to be applied to the age atribute to make sure the age atribute is nominal instead of numeric. Saving as an arff file prevents us to have to repeat this action every time. The most common algorithms will be run with 10 fold cross validation  and be added to a table to see their individual performances without changed parameters. 
@@ -89,16 +91,16 @@ knitr::kable(selected_results, format = "simple")
 4 sub sets are made, based on the 3 algorithms and the cfssubseteval. These are then tested in the explorer against each other.
 
 The following are the results of a T test where the different datasets are tested with the percentage correct for the algorithms. This shows that the 4th smaller dataset scores significantly worse in all the algorithms and the 2nd and 3rd cleaned datasets when it comes to a random forest. 
-![](Ttestswapresults.png)
+![](Images/Ttestswapresults.png)
 
 The are under the curve shows us that the area under the curve is even significantly worse with all the smaller datasets for 2 different algorithms. The last smaller dataset is  worse for all algorithms. 
-![](TtestswapresultsAOC.png)
+![](Images/TtestswapresultsAOC.png)
 
 So lets focus on how the 5 algorithms scored compared to the whole dataset. Since stacking has the highest score this algorithm is used as the comparison. 
 
-![](Stacking.png)
+![](Images/Stacking.png)
 
-![](StackingAUC.png)
+![](Images/StackingAUC.png)
 
 Vote scores significantly worse then stacking. When looking at the area under the curve stacking scores worse as well on the original dataset. 
 
@@ -120,7 +122,7 @@ tree_scores <- data.frame(tree_depth = c("unlimited",
 
 knitr::kable(tree_scores, format = "simple")
 ```
-The table shows the changes to the depth of the tree parameter and how they corresponded to the percentage correct with 10 fold cross validation. Now lets build a forest with trees with a depth of 7 since this seems to be the best parameter score wise. A forest with the depth of 7 gives a 78.5035 percent accuracy. By increasing the trees used under the iteration value to a 1000 instead of the standard 100 we get a 78.7349 percent accuracy. Increasin this to 10000 does take a lot more time and does not improve the score at all. 
+The table shows the changes to the depth of the tree parameter and how they corresponded to the percentage correct with 10 fold cross validation. Now lets build a forest with trees with a depth of 7 since this seems to be the best parameter score wise. A forest with the depth of 7 gives a 78.5035 percent accuracy. By increasing the trees used under the iteration value to a 1000 instead of the standard 100 we get a 78.7349 percent accuracy. Increasing this to 10000 does take a lot more time and does not improve the score at all. 
 
 By bagging we can change the number of iterations:
 
@@ -135,3 +137,40 @@ bagging_itter <- data.frame(itterations = c("10",
 knitr::kable(bagging_itter, format = "simple")
 ```
 Changing the number of iterations improves it when it is set to a 100 but decreases when set to a 1000. A 1000 iterations also takes more time and it is getting on the long side there with a time of 20.8 to build the model. SO bagging seems to be optimal at a 100 iterations for now. 
+
+Stacking seems to improve when using less and simpler algorithms. Also with j48 as a meta learner. After some more experimenting with different algorithms and settings the highest percentage seems to be 79.0177 correct with an AUC of 0,817. The setting used are the following base algorithms: Random forest with depth of 7, logistic, IBk with 3 neighbours, bagging with 100 iterations and OneR. The meta learner used was J48 without any changes to the settings. Using less algorithms from different categories and improving their settings led to this. 
+
+Since the 2 group in age is under represented a costsentive run was also tried where the matrix was changed to give 2 points to a 2 predicted as a 1 instead of a penalty of 1. This seemed to lower the overall score so no further experimentations were done on this area since a penalty of 2 was not much but lowered the score and did not change much in the actual group 2 predictions.
+
+The only thing that makes sense to change with the logistic algorithm is the number of iterations, yet this does not improve the algorithm. A lower iteration maximum decreases the score and eventually you reach a threshold where the score is the same as not changing the maximum. 
+
+An ROC curve is made of the 4 best algorithms with the changed variables.
+
+```{r}
+bagging_auc <- read.arff("Bagging_AUC.arff")
+rf_auc <- read.arff("RF_AUC.arff")
+logistic_auc <- read.arff("Logistic_AUC.arff")
+stacking_auc <- read.arff("Stacking_AUC.arff")
+
+subsetdata <- function(dataframe, value){
+  subsetted <- subset(dataframe, select=c(`True Positives`, `False Positives`))
+  subsetted$algorithm <- value
+  return(subsetted)
+}
+all_auc <- rbind(subsetdata(bagging_auc, "bagging"),
+              subsetdata(rf_auc, "Random Forest"),
+              subsetdata(logistic_auc, "Logistic"),
+              subsetdata(stacking_auc, "Stacking"))
+
+ggplot(all_auc, aes(x=`False Positives`, y = `True Positives`, group = algorithm)) +
+  geom_line(aes(color=algorithm)) +
+  ggtitle("ROC curve of the different algorithms")
+
+```
+This shows that all the algorithms have almost the same curve except for stacking, that one is slightly worse then the rest. Let's see if this corresponds with what the Weka experimenter says. 
+
+![](Images/ttest2.png)
+
+![](Images/AUC2.png)
+
+This shows that percentage correct is the highest with stacking, but only slightly higher then a random tree. But when looking at the AUC stacking is significantly worse. So for that reason the random forest with a tree depth of 7 is the chosen algorithm to continue with. Also cause of time consumption, the tree is faster then the stacking but also when looking at the categories like percentage correct and AUC a better choice. 
