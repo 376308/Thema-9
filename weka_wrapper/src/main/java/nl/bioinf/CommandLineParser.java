@@ -1,5 +1,4 @@
 package nl.bioinf;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.ParseException;
@@ -11,17 +10,19 @@ public class CommandLineParser {
         org.apache.commons.cli.CommandLineParser parser = new DefaultParser();
         options.AddOptions();
         CommandLine cmd = parser.parse(options.alloptions, args);
-        System.out.println();
+        System.out.println(cmd.hasOption("m"));
         return cmd;
     }
 
     private static void checkCommandline(CommandLine cmd){
+
+        System.out.println(cmd.hasOption("m"));
+        System.out.println(cmd.getOptionValue("m"));
         System.out.println(cmd.getArgList());
-        System.out.println(cmd.getOptionValue("m model"));
 
     }
 
-    public void runall(String[] args) throws ParseException {
+    public void runAll(String[] args) throws ParseException {
         CommandLine cmd = getCommandline(args);
         checkCommandline(cmd);
     }

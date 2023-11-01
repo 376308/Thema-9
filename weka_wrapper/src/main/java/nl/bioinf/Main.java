@@ -8,9 +8,8 @@ public class Main {
 
     public static void main(String[] args){
         try {
-            System.out.println("Hello world!");
             CommandLineParser testy = new CommandLineParser();
-            testy.runall(args);
+            testy.runAll(args);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
