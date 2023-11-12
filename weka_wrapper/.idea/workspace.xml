@@ -47,23 +47,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "settings.editor.selected.configurable": "preferences.general",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="nl.bioinf.Main" />
       <module name="weka_wrapper.main" />
-      <option name="PROGRAM_PARAMETERS" value="-m test -d test -i test" />
+      <option name="PROGRAM_PARAMETERS" value="-i test -f test" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="nl.bioinf.*" />
@@ -93,7 +94,13 @@
       <workItem from="1697798120939" duration="9962000" />
       <workItem from="1697810287943" duration="174000" />
       <workItem from="1698756263345" duration="5887000" />
-      <workItem from="1698824898471" duration="3626000" />
+      <workItem from="1698824898471" duration="3628000" />
+      <workItem from="1698836846245" duration="653000" />
+      <workItem from="1698923068814" duration="1049000" />
+      <workItem from="1699012052645" duration="5780000" />
+      <workItem from="1699438930554" duration="3122000" />
+      <workItem from="1699607794644" duration="2593000" />
+      <workItem from="1699624087610" duration="3114000" />
     </task>
     <servers />
   </component>

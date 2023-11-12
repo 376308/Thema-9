@@ -10,26 +10,26 @@ public class OptionProvider {
 
         Option model = Option.builder("m")
                 .longOpt("model")
-                .required(true)
+                .required(false)
                 .hasArg()
-                .desc("Model to be used")
-                .build();
-
-        Option data = Option.builder("d")
-                .longOpt("data")
-                .required(true)
-                .hasArg()
-                .desc("dataset to build the model")
+                .desc("Model to be used instead of the default one")
                 .build();
 
         Option instance = Option.builder("i")
                 .longOpt("instance")
-                .required(true)
+                .required(false)
                 .hasArg()
-                .desc("Instance to predict")
+                .desc("a single instance to predict")
+                .build();
+
+        Option file = Option.builder("f")
+                .longOpt("file")
+                .required(false)
+                .hasArg()
+                .desc("a csv file with multiple instances to predict")
                 .build();
         options.addOption(model);
-        options.addOption(data);
+        options.addOption(file);
         options.addOption(instance);
         this.alloptions = options;
     }

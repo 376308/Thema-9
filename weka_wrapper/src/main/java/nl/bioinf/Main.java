@@ -1,18 +1,25 @@
 package nl.bioinf;
-import org.apache.commons.cli.ParseException;
+import weka.classifiers.Classifier;
+import weka.core.Instances;
+import weka.core.SerializationHelper;
+import weka.core.converters.ConverterUtils;
 
 
 public class Main {
 
 
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception {
+        CommandLineParser testy = new CommandLineParser();
         try {
-            CommandLineParser testy = new CommandLineParser();
             testy.runAll(args);
-        } catch (ParseException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        WekaModel testo = new WekaModel();
+        Classifier model = testo.loadClassifier(testy.modelFile);
+
+
 
 
     }
