@@ -1,8 +1,9 @@
 # Thema-9
-Machine learning project done on a kaggle dataset with the properties of crabs. 
+Machine learning project done on a kaggle dataset with the properties of crabs. The final products
+map contains all the end results. A complete EDA, Machinelearning log, report and weka wrapper can be found here. 
 
-### Documents
-[**EDA.pdf**](https://github.com/376308/Thema-9/blob/master/EDA.pdf) contains the exploratory data-analysis before machinelearning, it is the logbook part1.
+The project tries to predict the age group of the crabs based on the physical properties of the crabs. 
 
-[**Machinelearning.pdf**]() contains the second part of the logbook after the EDA
-**FinalReport.pdf** is the final report 
+
+
+
