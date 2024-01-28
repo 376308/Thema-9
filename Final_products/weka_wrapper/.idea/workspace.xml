@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="fd89c815-d94e-42f1-bd7a-fcdb7f5eb150" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../EDA.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../MachineLearning.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../logbook.Rmd" beforeDir="false" afterPath="$PROJECT_DIR$/../../logbook.Rmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/.gradle/7.5.1/checksums/checksums.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/.gradle/7.5.1/checksums/md5-checksums.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/.gradle/7.5.1/checksums/sha1-checksums.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/.gradle/7.5.1/dependencies-accessors/dependencies-accessors.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/.gradle/7.5.1/dependencies-accessors/gc.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/.gradle/7.5.1/executionHistory/executionHistory.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/.gradle/7.5.1/executionHistory/executionHistory.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/.gradle/7.5.1/fileChanges/last-build.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/.gradle/7.5.1/fileHashes/fileHashes.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/.gradle/7.5.1/fileHashes/fileHashes.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/.gradle/7.5.1/fileHashes/resourceHashesCache.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/.gradle/7.5.1/gc.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/.gradle/buildOutputCleanup/cache.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/.gradle/file-system.probe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/.gradle/vcs-1/gc.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../weka_wrapper/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/build/classes/java/main/nl/bioinf/CommandLineParser.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/build/classes/java/main/nl/bioinf/Main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/build/classes/java/main/nl/bioinf/OptionProvider.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/build/classes/java/main/nl/bioinf/WekaModel.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/gradlew.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/settings.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/src/main/java/nl/bioinf/CommandLineParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/src/main/java/nl/bioinf/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/src/main/java/nl/bioinf/OptionProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/src/main/java/nl/bioinf/WekaModel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../weka_wrapper/src/main/java/nl/bioinf/data/RandomForestCrabs.model" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view />
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2Wi6iIbgs2vRwEovBL0voOw9ZPz" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/laris/Documents/School/Thema9/Thema-9/Final products/weka_wrapper",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "settings.editor.selected.configurable": "preferences.general",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="nl.bioinf.Main" />
+      <module name="weka_wrapper.main" />
+      <option name="PROGRAM_PARAMETERS" value="-f C:\Users\laris\Documents\School\Thema9\Thema-9\cleaned_data.arff" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="nl.bioinf.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="fd89c815-d94e-42f1-bd7a-fcdb7f5eb150" name="Changes" comment="" />
+      <created>1697203180784</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1697203180784</updated>
+      <workItem from="1697203182155" duration="2124000" />
+      <workItem from="1697611813804" duration="3031000" />
+      <workItem from="1697798120939" duration="9962000" />
+      <workItem from="1697810287943" duration="174000" />
+      <workItem from="1698756263345" duration="5887000" />
+      <workItem from="1698824898471" duration="3628000" />
+      <workItem from="1698836846245" duration="653000" />
+      <workItem from="1698923068814" duration="1049000" />
+      <workItem from="1699012052645" duration="5780000" />
+      <workItem from="1699438930554" duration="3122000" />
+      <workItem from="1699607794644" duration="2593000" />
+      <workItem from="1699624087610" duration="3114000" />
+      <workItem from="1701074814313" duration="650000" />
+      <workItem from="1701862408370" duration="218000" />
+      <workItem from="1704543655625" duration="696000" />
+      <workItem from="1706452661352" duration="5689000" />
+      <workItem from="1706476431425" duration="2585000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
